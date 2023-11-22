@@ -1,28 +1,51 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import * as uuid from 'uuid';
+import { EmailService } from 'src/email/email.service';
 
-@Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    console.log(createUserDto);
-    return 'This action adds a new user';
+  constructor(private emailService: EmailService) {}
+  async createUser(name: string, email: string, password: string) {
+    await this.checkUserExists(email); // 가입하려는 유저가 존재하는지 검사함
+
+    const signupVerifyToken = uuid.v1();
+
+    await this.saveUser(name, email, password, signupVerifyToken); // 유저를 DB에 저장
+    await this.sendMemberJoinEmail(email, signupVerifyToken); // 회원가입 인증 이메일을 발송
   }
 
-  findAll() {
-    return `This action returns all users`;
+  private checkUserExists(email: string) {
+    return false; // TODO: DB 연동 후 구현
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  private saveUser(
+    name: string,
+    eamil: string,
+    password: string,
+    signupVerifyToken: string,
+  ) {
+    return; // TODO: DB 연동 후 구현
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    console.log(updateUserDto);
-    return `This action updates a #${id} user`;
+  private async sendMemberJoinEmail(email: string, signupVerifyToken: string) {
+    await this.emailService.sendMemberJoinVerification(
+      email,
+      signupVerifyToken,
+    );
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async verifyEmail(signupVerifyToken: string): Promise<string> {
+    // TODO
+    throw new Error('Method not implemented.');
+  }
+
+  async login(email: string, password: string): Promise<string> {
+    // TODO
+
+    throw new Error('Method not implemented.');
+  }
+
+  async getUserInof(userId: string): Promise<UserInfo> {
+    // TODO
+
+    throw new Error('Method not implemented.');
   }
 }
