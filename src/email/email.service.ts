@@ -17,7 +17,7 @@ export class EmailService {
     this.transporter = nodemailer.createTransport({
       service: 'Gmail',
       auth: {
-        user: 'YOUR_GMAIL',
+        user: 'YOUR_GMAIL', // TODO: 환경변수로 옮기기
         pass: 'YOUR_PASSWORD',
       },
     });
